@@ -34,7 +34,7 @@ export const AddPost = () => {
       setImageUrl(data.url);
     } catch (err) {
       console.warn(err);
-      alert("Ошибка при загрузке файла!");
+      alert("Помилка при завантаженні файлу!");
     }
   };
 
@@ -68,7 +68,7 @@ export const AddPost = () => {
       navigate(`/posts/${_id}`);
     } catch (err) {
       console.warn(err);
-      alert("Ошибка при создании статьи!");
+      alert("Помилка при створенні посту!");
     }
   };
 
@@ -84,7 +84,7 @@ export const AddPost = () => {
         })
         .catch((err) => {
           console.warn(err);
-          alert("Ошибка при получении статьи!");
+          alert("Помилка при отриманні посту!");
         });
     }
   }, []);
@@ -94,7 +94,7 @@ export const AddPost = () => {
       spellChecker: false,
       maxHeight: "400px",
       autofocus: true,
-      placeholder: "Введите текст...",
+      placeholder: "Введіть текст...",
       status: false,
       autosave: {
         enabled: true,
@@ -115,7 +115,7 @@ export const AddPost = () => {
         variant="outlined"
         size="large"
       >
-        Загрузить превью
+        Завантажити зображення
       </Button>
       <input
         ref={inputFileRef}
@@ -130,7 +130,7 @@ export const AddPost = () => {
             color="error"
             onClick={onClickRemoveImage}
           >
-            Удалить
+            Видалити
           </Button>
           <img
             className={styles.image}
@@ -145,7 +145,7 @@ export const AddPost = () => {
         value={fields?.title}
         classes={{ root: styles?.title }}
         variant="standard"
-        placeholder="Заголовок статьи..."
+        placeholder="Заголовок посту..."
         onChange={(e) => setTitle(e.target.value)}
         fullWidth
       />
@@ -154,7 +154,7 @@ export const AddPost = () => {
         onChange={(e) => setTags(e.target.value)}
         classes={{ root: styles.tags }}
         variant="standard"
-        placeholder="Тэги"
+        placeholder="Теги"
         fullWidth
       />
       <SimpleMDE
@@ -165,10 +165,10 @@ export const AddPost = () => {
       />
       <div className={styles.buttons}>
         <Button onClick={onSubmit} size="large" variant="contained">
-          {isEditing ? "Сохранить" : "Опубликовать"}
+          {isEditing ? "Зберегти" : "Опублікувати"}
         </Button>
         <a href="/">
-          <Button size="large">Отмена</Button>
+          <Button size="large">Відміна</Button>
         </a>
       </div>
     </Paper>
