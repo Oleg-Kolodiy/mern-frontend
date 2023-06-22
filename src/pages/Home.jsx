@@ -62,7 +62,38 @@ export const Home = () => {
         </Grid>
         <Grid xs={4} item>
           <TagsBlock items={tags.items} isLoading={isTagsLoading} />
-          <CommentsBlock items={[]} isLoading={false} />
+          <CommentsBlock
+            items={[
+              {
+                user: {
+                  fullName: "Загадковий Юзер",
+                  avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
+                },
+                text: "Файно",
+              },
+              {
+                user: {
+                  fullName: "Test",
+                },
+                text: "тест",
+              },
+              {
+                user: {
+                  fullName: "Олександр",
+                },
+                text: "Чекаємо нові дописи",
+              },
+              {
+                user: {
+                  fullName: "Frontend Dev.",
+                  avatarUrl:
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBlA2ZLG5P84pkwwj_mmp4NhFaVnhq7hdxoOwYIy8&s",
+                },
+                text: "Які технології використовуються у вашому проекті ?",
+              },
+            ]}
+            isLoading={false}
+          />
         </Grid>
       </Grid>
     </>

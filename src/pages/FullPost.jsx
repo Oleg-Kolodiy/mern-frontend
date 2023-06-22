@@ -46,7 +46,34 @@ export const FullPost = () => {
       >
         <ReactMarkdown children={data.text} />
       </Post>
-      <CommentsBlock items={data.comments} isLoading={false}>
+      <CommentsBlock
+        items={
+          data.comments || [
+            {
+              user: {
+                fullName: "Test",
+                avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
+              },
+              text: "Файно",
+            },
+            {
+              user: {
+                fullName: "John New",
+                avatarUrl:
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBlA2ZLG5P84pkwwj_mmp4NhFaVnhq7hdxoOwYIy8&s",
+              },
+              text: "Мені подобається, це гарно!",
+            },
+            {
+              user: {
+                fullName: "Test",
+              },
+              text: "Це тестовий коментар.",
+            },
+          ]
+        }
+        isLoading={false}
+      >
         <Index postId={data._id} user={data.user} />
       </CommentsBlock>
     </>
