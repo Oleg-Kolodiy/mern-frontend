@@ -47,7 +47,7 @@ export const Home = () => {
                 title={obj.title}
                 imageUrl={
                   obj.imageUrl
-                    ? `${"http://localhost:9999"}${obj.imageUrl}`
+                    ? `${"http://localhost:7777"}${obj.imageUrl}`
                     : ""
                 }
                 user={obj.user}

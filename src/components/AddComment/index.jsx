@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 
 import styles from "./AddComment.module.scss";
@@ -7,19 +7,31 @@ import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 
-export const Index = ({ postId, user }) => {
-  const [value, setValue] = useState();
-
+export const Index = ({
+  postId,
+  user,
+  commentValue,
+  setCommentValue,
+  setComments,
+}) => {
   const onSubmit = async () => {
     try {
-      await axios.post(`/comments`, {
-        comments: { postId, user, text: value },
+      // await axios.patch(`/posts/${postId}`, {
+      //   comments: { user, text: commentValue },
+      // });
+
+      setComments({
+        user: {
+          id: user,
+          fullName: "Oleg",
+        },
+        text: commentValue,
       });
 
-      alert("Коментар додано");
+      setCommentValue("");
     } catch (err) {
-      console.warn(err);
-      alert("Помилка при відправці коментаря!");
+      // console.warn(err);
+      // alert("Помилка при відправці коментаря!");
     }
   };
 
@@ -29,11 +41,11 @@ export const Index = ({ postId, user }) => {
         <Avatar classes={{ root: styles.avatar }} />
         <div className={styles.form}>
           <TextField
-            value={value}
+            value={commentValue}
             label="Написати коментар"
             variant="outlined"
             maxRows={10}
-            onChange={({ target }) => setValue(target.value)}
+            onChange={({ target }) => setCommentValue(target.value)}
             multiline
             fullWidth
           />

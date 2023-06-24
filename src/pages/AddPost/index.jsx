@@ -18,7 +18,7 @@ export const AddPost = () => {
   const [isLoading, setLoading] = React.useState(false);
   const [text, setText] = React.useState("");
   const [title, setTitle] = React.useState("");
-  const [tags, setTags] = React.useState("");
+  const [tags, setTags] = React.useState([]);
   const [fields, setFields] = React.useState(null);
   const [imageUrl, setImageUrl] = React.useState("");
   const inputFileRef = React.useRef(null);
@@ -53,7 +53,7 @@ export const AddPost = () => {
       const fields = {
         title,
         imageUrl,
-        tags,
+        tags: tags.split(" "),
         text,
       };
 
@@ -80,7 +80,7 @@ export const AddPost = () => {
           setTitle(data?.title);
           setText(data.text);
           setImageUrl(data.imageUrl);
-          setTags(data.tags.join(","));
+          setTags(data.tags.join(" "));
         })
         .catch((err) => {
           console.warn(err);
@@ -134,7 +134,7 @@ export const AddPost = () => {
           </Button>
           <img
             className={styles.image}
-            src={`${"http://localhost:9999"}${imageUrl}`}
+            src={`${"http://localhost:7777"}${imageUrl}`}
             alt="Uploaded"
           />
         </>
@@ -151,7 +151,7 @@ export const AddPost = () => {
       />
       <TextField
         value={tags}
-        onChange={(e) => setTags(e.target.value)}
+        onChange={(e) => setTags(e.target.value.split(" "))}
         classes={{ root: styles.tags }}
         variant="standard"
         placeholder="Теги"
