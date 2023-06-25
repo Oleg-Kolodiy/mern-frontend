@@ -7,9 +7,17 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
 });
 
 export const fetchTags = createAsyncThunk("posts/fetchTags", async () => {
-  const { data } = await axios.get("/posts/tags");
+  const { data } = await axios.get("/posts/tags?limit=5");
   return data;
 });
+
+export const fetchComments = createAsyncThunk(
+  "posts/fetchComments",
+  async () => {
+    const { data } = await axios.get("/comments?limit=5");
+    return data;
+  }
+);
 
 export const fetchRemovePost = createAsyncThunk(
   "posts/fetchRemovePost",
@@ -25,6 +33,10 @@ const initialState = {
     items: [],
     status: "loading",
   },
+  comments: {
+    items: [],
+    status: "loading",
+  },
 };
 
 const postsSlice = createSlice({
@@ -32,7 +44,7 @@ const postsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
-    // Получение статей
+    // Отримання постів
     [fetchPosts.pending]: (state) => {
       state.posts.items = [];
       state.posts.status = "loading";
@@ -46,7 +58,7 @@ const postsSlice = createSlice({
       state.posts.status = "error";
     },
 
-    // Получение тегов
+    // Отримання тегів
     [fetchTags.pending]: (state) => {
       state.tags.items = [];
       state.tags.status = "loading";
@@ -60,7 +72,21 @@ const postsSlice = createSlice({
       state.tags.status = "error";
     },
 
-    // Удаление статьи
+    // Отримання коментарів
+    [fetchComments.pending]: (state) => {
+      state.comments.items = [];
+      state.comments.status = "loading";
+    },
+    [fetchComments.fulfilled]: (state, action) => {
+      state.comments.items = action.payload;
+      state.comments.status = "loaded";
+    },
+    [fetchComments.rejected]: (state) => {
+      state.comments.items = [];
+      state.comments.status = "error";
+    },
+
+    // видалення статті
     [fetchRemovePost.pending]: (state, action) => {
       state.posts.items = state.posts.items.filter(
         (obj) => obj._id !== action.meta.arg

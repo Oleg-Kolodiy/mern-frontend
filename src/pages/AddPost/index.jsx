@@ -151,7 +151,7 @@ export const AddPost = () => {
       />
       <TextField
         value={tags}
-        onChange={(e) => setTags(e.target.value.split(" "))}
+        onChange={(e) => setTags(e.target.value)}
         classes={{ root: styles.tags }}
         variant="standard"
         placeholder="Теги"

@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 
 import styles from "./AddComment.module.scss";
 
@@ -7,31 +6,23 @@ import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 
-export const Index = ({
-  postId,
-  user,
-  commentValue,
-  setCommentValue,
-  setComments,
-}) => {
+import axios from "../../axios";
+
+export const Index = ({ postId, userId, updateComments }) => {
+  const [commentValue, setCommentValue] = React.useState("");
+
   const onSubmit = async () => {
     try {
-      // await axios.patch(`/posts/${postId}`, {
-      //   comments: { user, text: commentValue },
-      // });
-
-      setComments({
-        user: {
-          id: user,
-          fullName: "Oleg",
-        },
+      const { data } = await axios.post(`/posts/${postId}/comments`, {
+        user: userId,
         text: commentValue,
       });
 
+      updateComments(data);
       setCommentValue("");
     } catch (err) {
-      // console.warn(err);
-      // alert("Помилка при відправці коментаря!");
+      console.warn(err);
+      alert("Помилка при додаванні коментаря!");
     }
   };
 

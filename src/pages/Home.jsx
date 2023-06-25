@@ -7,24 +7,22 @@ import Grid from "@mui/material/Grid";
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
 import { CommentsBlock } from "../components/CommentsBlock";
-import { fetchPosts, fetchTags } from "../redux/slices/posts";
+import { fetchPosts, fetchTags, fetchComments } from "../redux/slices/posts";
 
 export const Home = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.data);
-  const { posts, tags } = useSelector((state) => state.posts);
-
-  // const comments = posts.items?.map(
-  //   (item) => item?.comments[item?.comments?.length - 1]
-  // );
+  const { posts, tags, comments } = useSelector((state) => state.posts);
 
   const isPostsLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
+  const isCommentsLoading = comments.status === "loading";
 
   React.useEffect(() => {
     dispatch(fetchPosts());
     dispatch(fetchTags());
-  }, []);
+    dispatch(fetchComments());
+  }, [dispatch]);
 
   return (
     <>
@@ -43,6 +41,7 @@ export const Home = () => {
               <Post key={index} isLoading={true} />
             ) : (
               <Post
+                key={obj._id}
                 id={obj._id}
                 title={obj.title}
                 imageUrl={
@@ -53,7 +52,7 @@ export const Home = () => {
                 user={obj.user}
                 createdAt={obj.createdAt}
                 viewsCount={obj.viewsCount}
-                commentsCount={obj.comments?.length}
+                commentsCount={obj.commentsCount}
                 tags={obj.tags}
                 isEditable={userData?._id === obj.user._id}
               />
@@ -62,38 +61,7 @@ export const Home = () => {
         </Grid>
         <Grid xs={4} item>
           <TagsBlock items={tags.items} isLoading={isTagsLoading} />
-          <CommentsBlock
-            items={[
-              {
-                user: {
-                  fullName: "Загадковий Юзер",
-                  avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-                },
-                text: "Файно",
-              },
-              {
-                user: {
-                  fullName: "Test",
-                },
-                text: "тест",
-              },
-              {
-                user: {
-                  fullName: "Олександр",
-                },
-                text: "Чекаємо нові дописи",
-              },
-              {
-                user: {
-                  fullName: "Frontend Dev.",
-                  avatarUrl:
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBlA2ZLG5P84pkwwj_mmp4NhFaVnhq7hdxoOwYIy8&s",
-                },
-                text: "Які технології використовуються у вашому проекті ?",
-              },
-            ]}
-            isLoading={false}
-          />
+          <CommentsBlock items={comments.items} isLoading={isCommentsLoading} />
         </Grid>
       </Grid>
     </>

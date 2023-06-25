@@ -1,44 +1,28 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import { fetchAuthMe, selectId } from "../redux/slices/auth";
 import axios from "../axios";
 
 import { Post } from "../components/Post";
 import { Index } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
 
-const FAKE_COMMENTS = [
-  {
-    user: {
-      fullName: "Test",
-      avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-    },
-    text: "Файно",
-  },
-  {
-    user: {
-      fullName: "John New",
-      avatarUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBlA2ZLG5P84pkwwj_mmp4NhFaVnhq7hdxoOwYIy8&s",
-    },
-    text: "Мені подобається, це гарно!",
-  },
-  {
-    user: {
-      fullName: "Test",
-    },
-    text: "Це тестовий коментар.",
-  },
-];
-
 export const FullPost = () => {
   const [data, setData] = React.useState();
   const [isLoading, setLoading] = React.useState(true);
-  const [commentValue, setCommentValue] = React.useState("");
-  const [fakeComments, setFakeComments] = React.useState(FAKE_COMMENTS);
-  const setComments = (value) => setFakeComments((prev) => [...prev, value]);
+  const [comments, setComments] = React.useState([]);
+  const updateComments = (value) => setComments((prev) => [...prev, value]);
 
   const { id } = useParams();
+
+  const dispatch = useDispatch();
+  const currentUserId = useSelector(selectId);
+
+  React.useEffect(() => {
+    dispatch(fetchAuthMe());
+  }, []);
 
   React.useEffect(() => {
     axios
@@ -51,11 +35,27 @@ export const FullPost = () => {
         console.warn(err);
         alert("Помилка при отриманні посту");
       });
-  }, []);
+  }, [id]);
+
+  React.useEffect(() => {
+    axios
+      .get(`/posts/${id}/comments`)
+      .then((res) => {
+        setLoading(true);
+        setComments(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.warn(err);
+        alert("Помилка при додаванні коментаря");
+      });
+  }, [id]);
 
   if (isLoading) {
     return <Post isLoading={isLoading} isFullPost />;
   }
+
+  if (!data) return null;
 
   return (
     <>
@@ -68,22 +68,17 @@ export const FullPost = () => {
         user={data.user}
         createdAt={data.createdAt}
         viewsCount={data.viewsCount}
-        commentsCount={data.comments?.length}
+        commentsCount={comments?.length || data.commentsCount}
         tags={data.tags}
         isFullPost
       >
         <ReactMarkdown children={data.text} />
       </Post>
-      <CommentsBlock
-        items={data.comments.length ? data.comments : fakeComments}
-        isLoading={false}
-      >
+      <CommentsBlock items={comments} isLoading={isLoading}>
         <Index
           postId={data._id}
-          user={data.user}
-          commentValue={commentValue}
-          setComments={setComments}
-          setCommentValue={setCommentValue}
+          userId={currentUserId}
+          updateComments={updateComments}
         />
       </CommentsBlock>
     </>
